@@ -3,6 +3,7 @@ import pandas as pd
 import plotly.express as px
 import pickle
 import numpy as np
+import re
 
 # Set Page Configuration with a cleaner layout
 st.set_page_config(
@@ -842,7 +843,7 @@ with open('scaler_and_model.pkl', 'rb') as f:
 
 # Add this before the button click handler
 clusters = {
-    "Cluster 0 (Engaged Mid-Tier Customers)": {
+    "Engaged Mid-Tier Customers": {
         "description": "Middle-aged customers with very low tenure and average balance. Moderately active with 1-2 products and higher engagement. Slight exit risk.",
         "icon": "🎯",
         "products": [
@@ -853,7 +854,7 @@ clusters = {
             {"name": "Bundle Discounts", "description": "Package multiple products to increase loyalty"}
         ]
     },
-    "Cluster 1 (Low-Balance Loyalists)": {
+    "Low-Balance Loyalists": {
         "description": "Middle-aged customers with moderate tenure and very low balances. Hold more products, less active but high salary. Rarely leave the bank.",
         "icon": "💎",
         "products": [
@@ -864,7 +865,7 @@ clusters = {
             {"name": "Loyalty Recognition Programs", "description": "Acknowledge loyalty to maintain engagement"}
         ]
     },
-    "Cluster 2 (High-Balance At-Risk Customers)": {
+    "High-Balance At-Risk Customers": {
         "description": "Middle-aged customers with moderate tenure and highest average balance. Fewer products, less active. Highest exit risk requiring attention.",
         "icon": "⚡",
         "products": [
@@ -1017,9 +1018,9 @@ if menu == "Customer":
         
         # Map cluster numbers to exact dictionary keys
         cluster_keys = {
-            0: "Cluster 0 (Engaged Mid-Tier Customers)",
-            1: "Cluster 1 (Low-Balance Loyalists)",
-            2: "Cluster 2 (High-Balance At-Risk Customers)"
+            0: "Engaged Mid-Tier Customers",
+            1: "Low-Balance Loyalists",
+            2: "High-Balance At-Risk Customers"
         }
         
         # Get the exact cluster key that matches your dictionary
@@ -1246,7 +1247,7 @@ elif menu == "Products":
 
     # Define clusters and their products
     clusters = {
-        "Cluster 0 (Engaged Mid-Tier Customers)": {
+        "Engaged Mid-Tier Customers": {
             "description": "Middle-aged customers with very low tenure and average balance. Moderately active with 1-2 products and higher engagement. Slight exit risk.",
             "icon": "🎯",
             "products": [
@@ -1257,7 +1258,7 @@ elif menu == "Products":
                 {"name": "Bundle Discounts", "description": "Package multiple products to increase loyalty"}
             ]
         },
-        "Cluster 1 (Low-Balance Loyalists)": {
+        "Low-Balance Loyalists": {
             "description": "Middle-aged customers with moderate tenure and very low balances. Hold more products, less active but high salary. Rarely leave the bank.",
             "icon": "💎",
             "products": [
@@ -1268,7 +1269,7 @@ elif menu == "Products":
                 {"name": "Loyalty Recognition Programs", "description": "Acknowledge loyalty to maintain engagement"}
             ]
         },
-        "Cluster 2 (High-Balance At-Risk Customers)": {
+        "High-Balance At-Risk Customers": {
             "description": "Middle-aged customers with moderate tenure and highest average balance. Fewer products, less active. Highest exit risk requiring attention.",
             "icon": "⚡",
             "products": [
@@ -1400,8 +1401,15 @@ elif menu == "Products":
                 </div>
             """, unsafe_allow_html=True)
 
-            # Get cluster number from the cluster name
-            cluster_num = int(cluster_name.split()[1][0])  # Extracts number from "Cluster X"
+            # Map segment names to cluster numbers
+            cluster_mapping = {
+                "Engaged Mid-Tier Customers": 0,
+                "Low-Balance Loyalists": 1,
+                "High-Balance At-Risk Customers": 2
+            }
+            
+            # Get cluster number from the mapping
+            cluster_num = cluster_mapping[cluster_name]
             
             # Filter data for this cluster
             cluster_df = df[df['Cluster'] == cluster_num].copy()
