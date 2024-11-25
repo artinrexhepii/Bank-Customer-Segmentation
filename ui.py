@@ -879,49 +879,44 @@ clusters = {
 }
 
 if menu == "Customer":
-    # Header with gradient background
+    # Header with modern design
     st.markdown("""
         <div style='background: #000000; 
-                    padding: 2rem; 
-                    border-radius: 10px; 
+                    padding: 2.5rem; 
+                    border-radius: 15px; 
                     margin-bottom: 2rem;
-                    box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
-            <h1 style='color: #FFE600; margin: 0; font-size: 2.5rem;'>Customer Profile & Analytics</h1>
-            <p style='color: #ffffff; margin-top: 0.5rem; font-size: 1.1rem;'>Comprehensive customer information and insights</p>
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
+            <h1 style='color: #FFE600; margin: 0; font-size: 2.8rem; font-weight: 700;'>Customer Profile & Analytics</h1>
+            <p style='color: #ffffff; margin-top: 0.8rem; font-size: 1.2rem; opacity: 0.9;'>
+                Analyze and predict customer segments based on their profile
+            </p>
         </div>
     """, unsafe_allow_html=True)
     
-    # Main content area
-    st.markdown("""
-        <div class='card' style='background: white; padding: 2rem; border-radius: 15px; box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
-            <div style='display: flex; align-items: center; margin-bottom: 2rem;'>
-                <div style='background: #FFE600; padding: 10px; border-radius: 10px; margin-right: 15px;'>
-                    <span style='font-size: 1.5rem;'>👤</span>
-                </div>
-                <h3 style='margin: 0; color: #000000; font-size: 1.5rem;'>Personal Information</h3>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
+    # Create two columns for input fields with better spacing
+    col1, col2 = st.columns([1, 1])
     
-    # Personal Information Section
-    st.markdown("""
-        <div style='margin-top: 2rem;'>
-            <div style='display: flex; align-items: center; margin-bottom: 2rem;'>
-                <div style='background: #FFE600; padding: 10px; border-radius: 10px; margin-right: 15px;'>
-                    <span style='font-size: 1.5rem;'>👤</span>
-                </div>
-                <h3 style='margin: 0; color: #000000; font-size: 1.5rem;'>Personal Information</h3>
-            </div>
-        </div>
-    """, unsafe_allow_html=True)
-
-    # First row - Credit Score and Age
-    col1, col2 = st.columns(2)
     with col1:
+        st.markdown("""
+            <div style='background: white; 
+                        padding: 2rem; 
+                        border-radius: 12px; 
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                        margin-bottom: 1rem;'>
+                <h3 style='color: #000000; 
+                          font-size: 1.3rem; 
+                          margin-bottom: 1.5rem; 
+                          border-bottom: 2px solid #FFE600; 
+                          padding-bottom: 0.5rem;'>
+                    Personal Information
+                </h3>
+        """, unsafe_allow_html=True)
+        
         st.markdown("<p class='input-label'>Credit Score</p>", unsafe_allow_html=True)
         credit_score = st.number_input("",
             min_value=300, max_value=850, value=650,
             key="credit_score",
+            help="Customer's credit score (300-850)",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Balance ($)</p>", unsafe_allow_html=True)
@@ -929,18 +924,21 @@ if menu == "Customer":
             min_value=0, value=0,
             key="balance",
             format="%d",
+            help="Current account balance",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Products Per Year</p>", unsafe_allow_html=True)
         products_per_year = st.number_input("",
             min_value=0, max_value=10, value=1,
             key="products_per_year",
+            help="Number of products purchased per year",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Has Credit Card</p>", unsafe_allow_html=True)
         has_cr_card = st.selectbox("",
             ["No", "Yes"],
             key="has_cr_card",
+            help="Whether the customer has a credit card",
             label_visibility="collapsed")
         has_cr_card = 1 if has_cr_card == "Yes" else 0
             
@@ -948,14 +946,33 @@ if menu == "Customer":
         is_active = st.selectbox("",
             ["No", "Yes"],
             key="is_active",
+            help="Whether the customer is actively using services",
             label_visibility="collapsed")
         is_active = 1 if is_active == "Yes" else 0
+        
+        st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
+        st.markdown("""
+            <div style='background: white; 
+                        padding: 2rem; 
+                        border-radius: 12px; 
+                        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                        margin-bottom: 1rem;'>
+                <h3 style='color: #000000; 
+                          font-size: 1.3rem; 
+                          margin-bottom: 1.5rem; 
+                          border-bottom: 2px solid #FFE600; 
+                          padding-bottom: 0.5rem;'>
+                    Additional Details
+                </h3>
+        """, unsafe_allow_html=True)
+        
         st.markdown("<p class='input-label'>Age</p>", unsafe_allow_html=True)
         age = st.number_input("",
             min_value=18, max_value=100, value=35,
             key="age",
+            help="Customer's age",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Estimated Salary ($)</p>", unsafe_allow_html=True)
@@ -963,100 +980,154 @@ if menu == "Customer":
             min_value=0, value=50000, step=1000,
             key="estimated_salary",
             format="%d",
+            help="Customer's estimated annual salary",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Tenure (Years)</p>", unsafe_allow_html=True)
         tenure = st.number_input("",
             min_value=0, max_value=50, value=5,
             key="tenure",
+            help="Years as a customer",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Gender</p>", unsafe_allow_html=True)
         gender = st.selectbox("",
             ["Male", "Female"],
             key="gender",
+            help="Customer's gender",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Number of Products</p>", unsafe_allow_html=True)
         num_products = st.selectbox("",
-            options=list(range(11)),  # Creates a list [0,1,2,3,4,5,6,7,8,9,10]
+            options=list(range(11)),
             key="num_products",
+            help="Number of bank products currently used",
             label_visibility="collapsed")
+            
+        st.markdown("</div>", unsafe_allow_html=True)
 
-    # Generate Analysis Button
-    if st.button("Generate Customer Analysis", type="primary", 
+    # Generate Analysis Button with enhanced styling
+    st.markdown("""
+        <div style='background: white; 
+                    padding: 2rem; 
+                    border-radius: 12px; 
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                    margin-top: 1rem;'>
+    """, unsafe_allow_html=True)
+    
+    if st.button("Generate Customer Analysis", 
+                 type="primary",
                  use_container_width=True,
                  key="generate_analysis"):
         
-        # Convert gender to binary (Male=1, Female=0)
+        # Convert gender to binary
         gender_binary = 1 if gender == "Male" else 0
         
         # Create array with values in specified order
         customer_data = [
-            credit_score,           
-            gender_binary,          
-            age,                    
-            tenure,                 
-            balance,               
-            num_products,           
-            has_cr_card,           
-            is_active,             
-            estimated_salary,       
-            products_per_year       
+            credit_score, gender_binary, age, tenure, balance,
+            num_products, has_cr_card, is_active, estimated_salary,
+            products_per_year
         ]
         
-        # Convert the customer data into a DataFrame
-        columns = ['CreditScore', 'Gender', 'Age', 'Tenure', 'Balance', 'NumOfProducts',
-                   'HasCrCard', 'IsActiveMember', 'EstimatedSalary', 'ProductsPerYear']
+        # Convert to DataFrame
+        columns = ['CreditScore', 'Gender', 'Age', 'Tenure', 'Balance',
+                  'NumOfProducts', 'HasCrCard', 'IsActiveMember',
+                  'EstimatedSalary', 'ProductsPerYear']
         
         customer_array = np.array(customer_data).reshape(1, -1)
         customer_df = pd.DataFrame(customer_array, columns=columns)
         
-        # Scale the data and predict cluster
+        # Scale and predict
         customer_scaled = scaler.transform(customer_df)
         predicted_cluster = kmeans5.predict(customer_scaled)[0]
         
-        # Map cluster numbers to exact dictionary keys
+        # Map cluster numbers to names
         cluster_keys = {
             0: "Engaged Mid-Tier Customers",
             1: "Low-Balance Loyalists",
             2: "High-Balance At-Risk Customers"
         }
         
-        # Get the exact cluster key that matches your dictionary
         cluster_key = cluster_keys[predicted_cluster]
         
-        # Display cluster result with the friendly name
+        # Display result with enhanced styling
         st.markdown(f"""
-            <div style='background: linear-gradient(90deg, #000000 0%, #333333 100%); 
-                        padding: 2rem; border-radius: 10px; margin: 2rem 0;
-                        box-shadow: 0 4px 6px rgba(0,0,0,0.1);'>
-                <h2 style='color: #FFE600; margin: 0; font-size: 2rem;'>Customer Segment: {cluster_key}</h2>
+            <div style='background: #000000; 
+                        padding: 2rem; 
+                        border-radius: 15px; 
+                        margin: 2rem 0;
+                        box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
+                <h2 style='color: #FFE600; 
+                          margin: 0; 
+                          font-size: 2rem; 
+                          display: flex; 
+                          align-items: center;'>
+                    <span style='background: rgba(255,230,0,0.2); 
+                               padding: 0.5rem; 
+                               border-radius: 8px; 
+                               margin-right: 1rem;'>
+                        {clusters[cluster_key]['icon']}
+                    </span>
+                    Customer Segment: {cluster_key}
+                </h2>
+                <p style='color: #ffffff; 
+                          margin-top: 1rem; 
+                          font-size: 1.1rem; 
+                          opacity: 0.9;'>
+                    {clusters[cluster_key]['description']}
+                </p>
             </div>
         """, unsafe_allow_html=True)
         
-        # Get product recommendations using the exact key
-        recommended_products = clusters[cluster_key]['products']
-        
-        # Display recommended products
+        # Display recommended products with enhanced styling
         st.markdown("""
-            <div style='margin-top: 2rem;'>
-                <h3 style='color: #000; font-size: 1.3rem;'>Recommended Products</h3>
-            </div>
+            <h3 style='color: #000000; 
+                      font-size: 1.5rem; 
+                      margin: 2rem 0 1rem; 
+                      padding-bottom: 0.5rem; 
+                      border-bottom: 2px solid #FFE600;'>
+                Recommended Products
+            </h3>
         """, unsafe_allow_html=True)
         
-        # Display products in a grid
+        # Display products in an enhanced grid
         cols = st.columns(2)
-        for idx, product in enumerate(recommended_products):
+        for idx, product in enumerate(clusters[cluster_key]['products']):
             with cols[idx % 2]:
                 st.markdown(f"""
-                    <div style='background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem; box-shadow: 0 2px 4px rgba(0,0,0,0.1);'>
-                        <div style='font-size: 1.1rem; font-weight: 600; color: #000; margin-bottom: 0.5rem;'>
+                    <div style='background: white; 
+                              padding: 1.5rem; 
+                              border-radius: 12px; 
+                              margin-bottom: 1rem; 
+                              box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                              border: 1px solid #eee;
+                              transition: transform 0.2s ease, box-shadow 0.2s ease;'
+                         onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)';"
+                         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)';">
+                        <div style='font-size: 1.1rem; 
+                                  font-weight: 600; 
+                                  color: #000; 
+                                  margin-bottom: 0.8rem;
+                                  display: flex;
+                                  align-items: center;'>
+                            <span style='background: #FFE600;
+                                       padding: 0.4rem;
+                                       border-radius: 6px;
+                                       margin-right: 0.8rem;
+                                       font-size: 0.9rem;'>
+                                {idx + 1}
+                            </span>
                             {product['name']}
                         </div>
-                        <div style='color: #666;'>{product['description']}</div>
+                        <div style='color: #666;
+                                  line-height: 1.5;'>
+                            {product['description']}
+                        </div>
                     </div>
                 """, unsafe_allow_html=True)
+    
+    st.markdown("</div>", unsafe_allow_html=True)
 
 elif menu == "Overview":
     # Load the CSV data
@@ -1364,7 +1435,10 @@ elif menu == "Products":
                             <div style='font-size: 1.1rem; font-weight: 600; color: #000; margin-bottom: 0.5rem;'>
                                 {product['name']}
                             </div>
-                            <div style='color: #666;'>{product['description']}</div>
+                            <div style='color: #666;
+                                      line-height: 1.5;'>
+                                {product['description']}
+                            </div>
                         </div>
                     """, unsafe_allow_html=True)
 
