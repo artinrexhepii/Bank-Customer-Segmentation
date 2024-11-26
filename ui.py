@@ -1234,7 +1234,7 @@ if hasattr(st.session_state, 'predicted_cluster') and menu == "Customer":
                            padding: 0.5rem; 
                            border-radius: 8px; 
                            margin-right: 1rem;'>
-                    {clusters[cluster_key]['icon']}
+                    {st.session_state.predicted_cluster['icon']}
                 </span>
                 Customer Segment: {cluster_key}
             </h2>
