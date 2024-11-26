@@ -1492,6 +1492,7 @@ elif menu == "Products":
     # Update the customer table section in the cluster tab loop
     for tab, (cluster_name, cluster_data) in zip(tabs, clusters.items()):
         with tab:
+            # Display cluster information
             st.markdown(f"""
                 <div style='background: white; padding: 1.5rem; border-radius: 10px; margin-bottom: 1rem;'>
                     <div style='display: flex; align-items: center; margin-bottom: 1rem;'>
@@ -1504,7 +1505,9 @@ elif menu == "Products":
                 </div>
             """, unsafe_allow_html=True)
 
-            # Display products in a grid
+            # Display recommended products
+            st.markdown("<h3 style='color: #000; margin-bottom: 1rem;'>Recommended Products</h3>", unsafe_allow_html=True)
+            
             cols = st.columns(2)
             for idx, product in enumerate(cluster_data['products']):
                 with cols[idx % 2]:
@@ -1514,8 +1517,7 @@ elif menu == "Products":
                                   border-radius: 12px; 
                                   margin-bottom: 1rem; 
                                   box-shadow: 0 2px 8px rgba(0,0,0,0.05);
-                                  border: 1px solid #eee;
-                                  transition: transform 0.2s ease, box-shadow 0.2s ease;'>
+                                  border: 1px solid #eee;'>
                             <div style='font-size: 1.1rem; 
                                       font-weight: 600; 
                                       color: #000; 
@@ -1532,8 +1534,7 @@ elif menu == "Products":
                                 {product['name']}
                             </div>
                             <div style='color: #666;
-                                      line-height: 1.5;
-                                      margin-bottom: 1rem;'>
+                                      line-height: 1.5;'>
                                 {product['description']}
                             </div>
                         </div>
