@@ -1199,7 +1199,7 @@ if menu == "Customer":
         st.session_state.cluster_info = clusters[cluster_key]
 
 # Check if we have results to display (either from button click or stored in session)
-if hasattr(st.session_state, 'predicted_cluster'):
+if hasattr(st.session_state, 'predicted_cluster') and menu == "Customer":
     cluster_key = st.session_state.cluster_key
     
     # Display result with enhanced styling
