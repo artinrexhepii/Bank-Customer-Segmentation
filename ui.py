@@ -944,25 +944,26 @@ if menu == "Customer":
         </div>
     """, unsafe_allow_html=True)
     
-    # Create two columns for input fields with better spacing
-    col1, col2 = st.columns([1, 1])
-    
+    # Instead of separate cards in col1 and col2, create a single full-width card
+    st.markdown("""
+        <div style='background: white; 
+                    padding: 2rem; 
+                    border-radius: 12px; 
+                    box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+                    margin-bottom: 1rem;'>
+            <h3 style='color: #000000; 
+                      font-size: 1.3rem; 
+                      margin-bottom: 1.5rem; 
+                      border-bottom: 2px solid #FFE600; 
+                      padding-bottom: 0.5rem;'>
+                Client Details
+            </h3>
+    """, unsafe_allow_html=True)
+
+    # Create two columns for the inputs
+    col1, col2 = st.columns(2)
+
     with col1:
-        st.markdown("""
-            <div style='background: white; 
-                        padding: 2rem; 
-                        border-radius: 12px; 
-                        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-                        margin-bottom: 1rem;'>
-                <h3 style='color: #000000; 
-                          font-size: 1.3rem; 
-                          margin-bottom: 1.5rem; 
-                          border-bottom: 2px solid #FFE600; 
-                          padding-bottom: 0.5rem;'>
-                    Personal Information
-                </h3>
-        """, unsafe_allow_html=True)
-        
         st.markdown("<p class='input-label'>Surname</p>", unsafe_allow_html=True)
         surname = st.text_input("",
             value="",
@@ -1007,25 +1008,8 @@ if menu == "Customer":
             help="Whether the customer is actively using services",
             label_visibility="collapsed")
         is_active = 1 if is_active == "Yes" else 0
-        
-        st.markdown("</div>", unsafe_allow_html=True)
 
     with col2:
-        st.markdown("""
-            <div style='background: white; 
-                        padding: 2rem; 
-                        border-radius: 12px; 
-                        box-shadow: 0 2px 10px rgba(0,0,0,0.05);
-                        margin-bottom: 1rem;'>
-                <h3 style='color: #000000; 
-                          font-size: 1.3rem; 
-                          margin-bottom: 1.5rem; 
-                          border-bottom: 2px solid #FFE600; 
-                          padding-bottom: 0.5rem;'>
-                    Additional Details
-                </h3>
-        """, unsafe_allow_html=True)
-        
         st.markdown("<p class='input-label'>Email</p>", unsafe_allow_html=True)
         email = st.text_input("",
             value="",
@@ -1068,8 +1052,9 @@ if menu == "Customer":
             key="num_products",
             help="Number of bank products currently used",
             label_visibility="collapsed")
-            
-        st.markdown("</div>", unsafe_allow_html=True)
+
+    # Close the card div
+    st.markdown("</div>", unsafe_allow_html=True)
 
     # Generate Analysis Button with enhanced styling
     st.markdown("""
