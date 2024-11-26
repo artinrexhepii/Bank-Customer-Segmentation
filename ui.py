@@ -1074,21 +1074,20 @@ if menu == "Customer":
     with col1:
         st.markdown("<p class='input-label'>Surname</p>", unsafe_allow_html=True)
         surname = st.text_input("",
-            value="",
             key="surname",
             help="Customer's surname",
             label_visibility="collapsed")
         
         st.markdown("<p class='input-label'>Credit Score</p>", unsafe_allow_html=True)
         credit_score = st.number_input("",
-            min_value=300, max_value=850, value=650,
+            min_value=300, max_value=850, value=750,
             key="credit_score",
             help="Customer's credit score (300-850)",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Balance ($)</p>", unsafe_allow_html=True)
         balance = st.number_input("",
-            min_value=0, value=0,
+            min_value=0, value=125000,
             key="balance",
             format="%d",
             help="Current account balance",
@@ -1120,21 +1119,20 @@ if menu == "Customer":
     with col2:
         st.markdown("<p class='input-label'>Email</p>", unsafe_allow_html=True)
         email = st.text_input("",
-            value="",
             key="email",
             help="Customer's email address",
             label_visibility="collapsed")
         
         st.markdown("<p class='input-label'>Age</p>", unsafe_allow_html=True)
         age = st.number_input("",
-            min_value=18, max_value=100, value=35,
+            min_value=18, max_value=100, value=45,
             key="age",
             help="Customer's age",
             label_visibility="collapsed")
             
         st.markdown("<p class='input-label'>Estimated Salary ($)</p>", unsafe_allow_html=True)
         estimated_salary = st.number_input("",
-            min_value=0, value=50000, step=1000,
+            min_value=0, value=115000,
             key="estimated_salary",
             format="%d",
             help="Customer's estimated annual salary",
@@ -1142,7 +1140,7 @@ if menu == "Customer":
             
         st.markdown("<p class='input-label'>Tenure (Years)</p>", unsafe_allow_html=True)
         tenure = st.number_input("",
-            min_value=0, max_value=50, value=5,
+            min_value=0, max_value=50, value=3,
             key="tenure",
             help="Years as a customer",
             label_visibility="collapsed")
