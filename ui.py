@@ -735,11 +735,17 @@ st.markdown("""
         border-radius: 8px !important;
         color: white !important;
         font-size: 1rem !important;
-        font-weight: 400 !important;
+        font-weight: 700 !important;
         cursor: pointer !important;
         transition: all 0.2s ease !important;
         border: 1px solid rgba(255, 255, 255, 0.1) !important;
         margin: 0.2rem 0 !important;
+    }
+
+    /* Radio button text color */
+    .stRadio label span {
+        color: white !important;
+        font-weight: 700 !important;
     }
     
     /* Hide the default radio button */
@@ -757,21 +763,21 @@ st.markdown("""
     .stRadio [data-checked=true] label {
         background: #FFE600 !important;
         color: black !important;
-        font-weight: 600 !important;
+        font-weight: 700 !important;
         transform: translateX(4px) !important;
     }
 
     /* Additional specificity for radio buttons */
-    div[data-testid="stRadio"] > div[role="radiogroup"] > label[data-checked="true"],
-    div[data-testid="stRadio"] > div[role="radiogroup"] > div[data-checked="true"] {
-        background-color: #FFE600 !important;
-        color: black !important;
+    div[data-testid="stRadio"] > div[role="radiogroup"] > label,
+    div[data-testid="stRadio"] > div[role="radiogroup"] > div {
+        color: white !important;
+        font-weight: 700 !important;
     }
 
-    /* Radio button when checked */
-    .stRadio > div > div[data-checked="true"] {
-        background-color: #FFE600 !important;
-        color: black !important;
+    /* Ensure text stays white even in different states */
+    .stRadio > div > div > label > div {
+        color: white !important;
+        font-weight: 700 !important;
     }
 
     .st-az {
@@ -787,6 +793,11 @@ st.markdown("""
         background-image: none;  /* Remove gradient */
         background-color: #FFE600 !important;  /* Add solid Raiffeisen yellow */
         z-index: 999990;
+    }
+
+    /* Progress bar color */
+    .st-c1 {
+        background-color: #FFE600 !important;
     }
     </style>
 """, unsafe_allow_html=True)
