@@ -887,28 +887,120 @@ SENDER_PASSWORD = "gitr wahh gmrd syye"  # Replace with your App Password
 
 def send_product_email(receiver_email, product_name, product_description, customer_surname):
     # Email setup
-    msg = MIMEMultipart()
+    msg = MIMEMultipart('alternative')
     msg['From'] = SENDER_EMAIL
     msg['To'] = receiver_email
     msg['Subject'] = f"Raiffeisen Bank: Information about {product_name}"
 
-    # Email body
-    body = f"""
-    Dear {customer_surname},
-
-    I hope this email finds you well. I wanted to introduce you to {product_name}, designed to help you manage your finances more effectively and achieve your financial goals with ease.
-    
-    Product Details:
-    {product_description}
-
-    If you have any questions or would like to proceed with this product, 
-    please don't hesitate to contact us.
-
-    Best regards,
-    Raiffeisen Bank Team
+    # HTML Email template
+    html = f"""
+    <!DOCTYPE html>
+    <html>
+    <head>
+        <style>
+            body {{
+                font-family: Arial, sans-serif;
+                line-height: 1.6;
+                color: #333333;
+                margin: 0;
+                padding: 0;
+            }}
+            .container {{
+                max-width: 600px;
+                margin: 0 auto;
+                padding: 20px;
+            }}
+            .header {{
+                background-color: #000000;
+                padding: 20px;
+                text-align: center;
+            }}
+            .header img {{
+                max-width: 200px;
+                height: auto;
+            }}
+            .content {{
+                background-color: #ffffff;
+                padding: 30px;
+                border-radius: 5px;
+                box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+            }}
+            .product-name {{
+                color: #000000;
+                font-size: 24px;
+                font-weight: bold;
+                margin-bottom: 20px;
+            }}
+            .product-description {{
+                background-color: #f9f9f9;
+                padding: 20px;
+                border-radius: 5px;
+                margin: 20px 0;
+            }}
+            .footer {{
+                text-align: center;
+                padding: 20px;
+                color: #666666;
+                font-size: 12px;
+            }}
+            .button {{
+                display: inline-block;
+                background-color: #FFE600;
+                color: #000000;
+                padding: 12px 25px;
+                text-decoration: none;
+                border-radius: 5px;
+                margin-top: 20px;
+                font-weight: bold;
+            }}
+            .contact-info {{
+                margin-top: 30px;
+                padding-top: 20px;
+                border-top: 1px solid #eeeeee;
+            }}
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <div class="header">
+                <img src="https://companieslogo.com/img/orig/RAW.F-6920c4d1.png?t=1720244493" alt="Raiffeisen Bank Logo">
+            </div>
+            <div class="content">
+                <p>Dear {customer_surname},</p>
+                
+                <p>Thank you for your interest in our financial products. We're excited to provide you with information about our:</p>
+                
+                <div class="product-name">{product_name}</div>
+                
+                <div class="product-description">
+                    {product_description}
+                </div>
+                
+                <p>This product has been specifically recommended based on your profile and financial needs.</p>
+                
+                <a href="#" class="button">Learn More</a>
+                
+                <div class="contact-info">
+                    <p>If you have any questions or would like to proceed with this product, please don't hesitate to:</p>
+                    <ul>
+                        <li>Call us at: <strong>+383 38 222 222</strong></li>
+                        <li>Visit your nearest branch</li>
+                        <li>Reply to this email</li>
+                    </ul>
+                </div>
+            </div>
+            <div class="footer">
+                <p>© 2024 Raiffeisen Bank Kosovo. All rights reserved.</p>
+                <p>This email was sent to {receiver_email}</p>
+                <p>Raiffeisen Bank Kosovo J.S.C. | Prishtina, Kosovo</p>
+            </div>
+        </div>
+    </body>
+    </html>
     """
 
-    msg.attach(MIMEText(body, 'plain'))
+    # Attach HTML version
+    msg.attach(MIMEText(html, 'html'))
 
     try:
         # Create SMTP session
