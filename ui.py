@@ -799,6 +799,11 @@ st.markdown("""
     .st-c1 {
         background-color: #FFE600 !important;
     }
+
+    /* Progress bar text color */
+    .st-da {
+        color: white !important;
+    }
     </style>
 """, unsafe_allow_html=True)
 
