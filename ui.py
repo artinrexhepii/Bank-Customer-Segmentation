@@ -4,6 +4,9 @@ import plotly.express as px
 import pickle
 import numpy as np
 import re
+import smtplib
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
 
 # Set Page Configuration with a cleaner layout
 st.set_page_config(
@@ -878,6 +881,54 @@ clusters = {
     }
 }
 
+# Add these constants at the top of your file
+SENDER_EMAIL = "artinrexhepi03@gmail.com"
+SENDER_PASSWORD = "gitr wahh gmrd syye"  # Replace with your App Password
+
+def send_product_email(receiver_email, product_name, product_description, customer_surname):
+    # Email setup
+    msg = MIMEMultipart()
+    msg['From'] = SENDER_EMAIL
+    msg['To'] = receiver_email
+    msg['Subject'] = f"Raiffeisen Bank: Information about {product_name}"
+
+    # Email body
+    body = f"""
+    Dear {customer_surname},
+
+    I hope this email finds you well. I wanted to introduce you to {product_name}, designed to help you manage your finances more effectively and achieve your financial goals with ease.
+    
+    Product Details:
+    {product_description}
+
+    If you have any questions or would like to proceed with this product, 
+    please don't hesitate to contact us.
+
+    Best regards,
+    Raiffeisen Bank Team
+    """
+
+    msg.attach(MIMEText(body, 'plain'))
+
+    try:
+        # Create SMTP session
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        
+        # Login
+        server.login(SENDER_EMAIL, SENDER_PASSWORD)
+        
+        # Send email
+        text = msg.as_string()
+        server.sendmail(SENDER_EMAIL, receiver_email, text)
+        
+        # Close session
+        server.quit()
+        return True
+    except Exception as e:
+        print(f"Error sending email: {str(e)}")
+        return False
+
 if menu == "Customer":
     # Header with modern design
     st.markdown("""
@@ -911,6 +962,13 @@ if menu == "Customer":
                     Personal Information
                 </h3>
         """, unsafe_allow_html=True)
+        
+        st.markdown("<p class='input-label'>Surname</p>", unsafe_allow_html=True)
+        surname = st.text_input("",
+            value="",
+            key="surname",
+            help="Customer's surname",
+            label_visibility="collapsed")
         
         st.markdown("<p class='input-label'>Credit Score</p>", unsafe_allow_html=True)
         credit_score = st.number_input("",
@@ -967,6 +1025,13 @@ if menu == "Customer":
                     Additional Details
                 </h3>
         """, unsafe_allow_html=True)
+        
+        st.markdown("<p class='input-label'>Email</p>", unsafe_allow_html=True)
+        email = st.text_input("",
+            value="",
+            key="email",
+            help="Customer's email address",
+            label_visibility="collapsed")
         
         st.markdown("<p class='input-label'>Age</p>", unsafe_allow_html=True)
         age = st.number_input("",
@@ -1051,81 +1116,106 @@ if menu == "Customer":
         
         cluster_key = cluster_keys[predicted_cluster]
         
-        # Display result with enhanced styling
-        st.markdown(f"""
-            <div style='background: #000000; 
-                        padding: 2rem; 
-                        border-radius: 15px; 
-                        margin: 2rem 0;
-                        box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
-                <h2 style='color: #FFE600; 
-                          margin: 0; 
-                          font-size: 2rem; 
-                          display: flex; 
-                          align-items: center;'>
-                    <span style='background: rgba(255,230,0,0.2); 
-                               padding: 0.5rem; 
-                               border-radius: 8px; 
-                               margin-right: 1rem;'>
-                        {clusters[cluster_key]['icon']}
-                    </span>
-                    Customer Segment: {cluster_key}
-                </h2>
-                <p style='color: #ffffff; 
-                          margin-top: 1rem; 
-                          font-size: 1.1rem; 
-                          opacity: 0.9;'>
-                    {clusters[cluster_key]['description']}
-                </p>
-            </div>
-        """, unsafe_allow_html=True)
-        
-        # Display recommended products with enhanced styling
-        st.markdown("""
-            <h3 style='color: #000000; 
-                      font-size: 1.5rem; 
-                      margin: 2rem 0 1rem; 
-                      padding-bottom: 0.5rem; 
-                      border-bottom: 2px solid #FFE600;'>
-                Recommended Products
-            </h3>
-        """, unsafe_allow_html=True)
-        
-        # Display products in an enhanced grid
-        cols = st.columns(2)
-        for idx, product in enumerate(clusters[cluster_key]['products']):
-            with cols[idx % 2]:
-                st.markdown(f"""
-                    <div style='background: white; 
+        # Store the results in session state so they persist
+        st.session_state.predicted_cluster = predicted_cluster
+        st.session_state.cluster_key = cluster_key
+        st.session_state.cluster_info = clusters[cluster_key]
+
+# Check if we have results to display (either from button click or stored in session)
+if hasattr(st.session_state, 'predicted_cluster'):
+    cluster_key = st.session_state.cluster_key
+    
+    # Display result with enhanced styling
+    st.markdown(f"""
+        <div style='background: #000000; 
+                    padding: 2rem; 
+                    border-radius: 15px; 
+                    margin: 2rem 0;
+                    box-shadow: 0 4px 15px rgba(0,0,0,0.1);'>
+            <h2 style='color: #FFE600; 
+                      margin: 0; 
+                      font-size: 2rem; 
+                      display: flex; 
+                      align-items: center;'>
+                <span style='background: rgba(255,230,0,0.2); 
+                           padding: 0.5rem; 
+                           border-radius: 8px; 
+                           margin-right: 1rem;'>
+                    {clusters[cluster_key]['icon']}
+                </span>
+                Customer Segment: {cluster_key}
+            </h2>
+            <p style='color: #ffffff; 
+                      margin-top: 1rem; 
+                      font-size: 1.1rem; 
+                      opacity: 0.9;'>
+                {clusters[cluster_key]['description']}
+            </p>
+        </div>
+    """, unsafe_allow_html=True)
+    
+    # Display recommended products with enhanced styling
+    st.markdown("""
+        <h3 style='color: #000000; 
+                  font-size: 1.5rem; 
+                  margin: 2rem 0 1rem; 
+                  padding-bottom: 0.5rem; 
+                  border-bottom: 2px solid #FFE600;'>
+            Recommended Products
+        </h3>
+    """, unsafe_allow_html=True)
+    
+    # Display products in an enhanced grid
+    cols = st.columns(2)
+    for idx, product in enumerate(clusters[cluster_key]['products']):
+        with cols[idx % 2]:
+            st.markdown(f"""
+                <div style='background: white; 
                               padding: 1.5rem; 
                               border-radius: 12px; 
                               margin-bottom: 1rem; 
                               box-shadow: 0 2px 8px rgba(0,0,0,0.05);
                               border: 1px solid #eee;
-                              transition: transform 0.2s ease, box-shadow 0.2s ease;'
-                         onmouseover="this.style.transform='translateY(-5px)';this.style.boxShadow='0 4px 15px rgba(0,0,0,0.1)';"
-                         onmouseout="this.style.transform='translateY(0)';this.style.boxShadow='0 2px 8px rgba(0,0,0,0.05)';">
-                        <div style='font-size: 1.1rem; 
-                                  font-weight: 600; 
-                                  color: #000; 
-                                  margin-bottom: 0.8rem;
-                                  display: flex;
-                                  align-items: center;'>
-                            <span style='background: #FFE600;
-                                       padding: 0.4rem;
-                                       border-radius: 6px;
-                                       margin-right: 0.8rem;
-                                       font-size: 0.9rem;'>
-                                {idx + 1}
-                            </span>
-                            {product['name']}
-                        </div>
-                        <div style='color: #666;
-                                  line-height: 1.5;'>
-                            {product['description']}
-                        </div>
+                              transition: transform 0.2s ease, box-shadow 0.2s ease;'>
+                    <div style='font-size: 1.1rem; 
+                              font-weight: 600; 
+                              color: #000; 
+                              margin-bottom: 0.8rem;
+                              display: flex;
+                              align-items: center;'>
+                        <span style='background: #FFE600;
+                                   padding: 0.4rem;
+                                   border-radius: 6px;
+                                   margin-right: 0.8rem;
+                                   font-size: 0.9rem;'>
+                            {idx + 1}
+                        </span>
+                        {product['name']}
                     </div>
-                """, unsafe_allow_html=True)
+                    <div style='color: #666;
+                              line-height: 1.5;
+                              margin-bottom: 1rem;'>
+                        {product['description']}
+                    </div>
+                </div>
+            """, unsafe_allow_html=True)
+                
+            # Only show email button if email is provided and not empty
+            if email and email.strip():
+                if st.button(f"📧 Send Product Info", key=f"email_{idx}"):
+                    if send_product_email(email, product['name'], product['description'], surname):
+                        st.markdown("""
+                            <div style='color: white; 
+                                      font-weight: bold; 
+                                      background-color: #00C853; 
+                                      padding: 0.75rem; 
+                                      border-radius: 6px; 
+                                      text-align: center;'>
+                                Product information sent successfully!
+                            </div>
+                        """, unsafe_allow_html=True)
+                    else:
+                        st.error("Failed to send email. Please try again later.")
     
     st.markdown("</div>", unsafe_allow_html=True)
 
@@ -1316,100 +1406,11 @@ elif menu == "Products":
         </div>
     """, unsafe_allow_html=True)
 
-    # Define clusters and their products
-    clusters = {
-        "Engaged Mid-Tier Customers": {
-            "description": "Middle-aged customers with very low tenure and average balance. Moderately active with 1-2 products and higher engagement. Slight exit risk.",
-            "icon": "🎯",
-            "products": [
-                {"name": "Loyalty Rewards Program", "description": "Rewards for higher product usage to increase engagement"},
-                {"name": "Customized Investment Plans", "description": "Mid-range investments targeting moderate balance"},
-                {"name": "Flexible Credit Card Options", "description": "Cash-back and travel rewards"},
-                {"name": "Personalized Financial Coaching", "description": "Maximize engagement and benefits"},
-                {"name": "Bundle Discounts", "description": "Package multiple products to increase loyalty"}
-            ]
-        },
-        "Low-Balance Loyalists": {
-            "description": "Middle-aged customers with moderate tenure and very low balances. Hold more products, less active but high salary. Rarely leave the bank.",
-            "icon": "💎",
-            "products": [
-                {"name": "Low-Threshold Savings Plans", "description": "No minimum balance requirements"},
-                {"name": "No-Fee Credit Cards", "description": "Increase product adoption without financial burden"},
-                {"name": "Budget Management Tools", "description": "Plan and grow financial assets"},
-                {"name": "Exclusive Discounts", "description": "Incentives for everyday transactions"},
-                {"name": "Loyalty Recognition Programs", "description": "Acknowledge loyalty to maintain engagement"}
-            ]
-        },
-        "High-Balance At-Risk Customers": {
-            "description": "Middle-aged customers with moderate tenure and highest average balance. Fewer products, less active. Highest exit risk requiring attention.",
-            "icon": "⚡",
-            "products": [
-                {"name": "Premium Relationship Manager", "description": "Dedicated support for personalized attention"},
-                {"name": "Priority Services", "description": "Faster loan approvals and priority customer service"},
-                {"name": "High-Yield Savings Accounts", "description": "Higher interest rates for substantial balances"},
-                {"name": "Exit Prevention Offers", "description": "Targeted retention offers and waived fees"},
-                {"name": "Financial Goal Consultations", "description": "Tailored consultations to address dissatisfaction"}
-            ]
-        }
-    }
-
-    # Add this CSS before creating the tabs
-    st.markdown("""
-        <style>
-            /* Tab styling */
-            .stTabs [data-baseweb="tab-list"] {
-                gap: 8px;
-                background-color: white;
-                padding: 10px;
-                border-radius: 10px;
-                margin-bottom: 1rem;
-            }
-            
-            .stTabs [data-baseweb="tab"] {
-                height: auto;
-                padding: 10px 16px;
-                color: black !important;
-                font-weight: 500;
-                background-color: #f8f9fa;
-                border-radius: 6px;
-                border: 1px solid #dee2e6;
-            }
-            
-            .stTabs [data-baseweb="tab"]:hover {
-                background-color: #e9ecef;
-                border-color: #ced4da;
-            }
-            
-            .stTabs [aria-selected="true"] {
-                background-color: #FFE600 !important;
-                color: black !important;
-                font-weight: 600;
-                border: none !important;
-            }
-            
-            /* Ensure text color remains black */
-            .stTabs [role="tabpanel"] p {
-                color: black !important;
-            }
-            
-            /* Style the tab content area */
-            .stTabs [role="tabpanel"] {
-                background-color: white;
-                border-radius: 10px;
-                padding: 10px;
-            }
-        </style>
-    """, unsafe_allow_html=True)
-
     # Create tabs for each cluster
     tabs = st.tabs(list(clusters.keys()))
     
     # Load the CSV data
     df = pd.read_csv('clustered_data.csv')
-
-    # Function to format currency values
-    def format_currency(value):
-        return f"${value:,.2f}"
 
     # Update the customer table section in the cluster tab loop
     for tab, (cluster_name, cluster_data) in zip(tabs, clusters.items()):
@@ -1431,42 +1432,35 @@ elif menu == "Products":
             for idx, product in enumerate(cluster_data['products']):
                 with cols[idx % 2]:
                     st.markdown(f"""
-                        <div class='card' style='cursor: pointer; margin-bottom: 1rem; padding: 1.5rem;'>
-                            <div style='font-size: 1.1rem; font-weight: 600; color: #000; margin-bottom: 0.5rem;'>
+                        <div style='background: white; 
+                                  padding: 1.5rem; 
+                                  border-radius: 12px; 
+                                  margin-bottom: 1rem; 
+                                  box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+                                  border: 1px solid #eee;
+                                  transition: transform 0.2s ease, box-shadow 0.2s ease;'>
+                            <div style='font-size: 1.1rem; 
+                                      font-weight: 600; 
+                                      color: #000; 
+                                      margin-bottom: 0.8rem;
+                                      display: flex;
+                                      align-items: center;'>
+                                <span style='background: #FFE600;
+                                           padding: 0.4rem;
+                                           border-radius: 6px;
+                                           margin-right: 0.8rem;
+                                           font-size: 0.9rem;'>
+                                    {idx + 1}
+                                </span>
                                 {product['name']}
                             </div>
                             <div style='color: #666;
-                                      line-height: 1.5;'>
+                                      line-height: 1.5;
+                                      margin-bottom: 1rem;'>
                                 {product['description']}
                             </div>
                         </div>
                     """, unsafe_allow_html=True)
-
-                    if st.button(f"View Details", key=f"{cluster_name}_{product['name']}"):
-                        st.markdown(f"""
-                            <div style='background: white; padding: 1.5rem; border-radius: 10px; margin: 1rem 0; border: 1px solid #ddd;'>
-                                <h3 style='color: #000; margin-bottom: 1rem;'>{product['name']} Details</h3>
-                                <div style='color: #000; margin-bottom: 0.5rem;'>
-                                    <strong>Target Audience:</strong> {cluster_data['description']}
-                                </div>
-                                <div style='color: #000; margin-bottom: 0.5rem;'>
-                                    <strong>Key Features:</strong>
-                                    <ul style='color: #000; margin-top: 0.5rem;'>
-                                        <li>Feature 1: Premium benefits tailored to customer segment</li>
-                                        <li>Feature 2: Competitive rates and terms</li>
-                                        <li>Feature 3: Exclusive rewards and perks</li>
-                                    </ul>
-                                </div>
-                                <div style='color: #000; margin-bottom: 0.5rem;'>
-                                    <strong>Requirements:</strong>
-                                    <ul style='color: #000; margin-top: 0.5rem;'>
-                                        <li>Minimum balance: $1,000</li>
-                                        <li>Credit score: 650+</li>
-                                        <li>Account history: 6+ months</li>
-                                    </ul>
-                                </div>
-                            </div>
-                        """, unsafe_allow_html=True)
 
             # Show customer table
             st.markdown("""
