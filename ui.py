@@ -1198,7 +1198,7 @@ if menu == "Customer":
         
         # Scale and predict
         customer_scaled = scaler.transform(customer_df)
-        predicted_cluster = kmeans5.predict(customer_scaled)[0]
+        predicted_cluster = kmeans5.predict(customer_scaled)[0][0]
         
         # Map cluster numbers to names
         cluster_keys = {
