@@ -52,19 +52,19 @@ Try out the live demo of our application here:
 
 ## Customer Segments
 
-### Engaged Mid-Tier Customers 🎯
+### Engaged Mid-Tier Customers 
 - Middle-aged customers
 - Low tenure, average balance
 - Moderate activity with 1-2 products
 - Slight exit risk
 
-### Low-Balance Loyalists 💎
+### Low-Balance Loyalists 
 - Middle-aged customers
 - Moderate tenure, low balances
 - Multiple products
 - High salary, strong loyalty
 
-### High-Balance At-Risk Customers ⚡
+### High-Balance At-Risk Customers 
 - Middle-aged customers
 - Moderate tenure
 - Highest average balance
